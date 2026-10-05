@@ -1,58 +1,29 @@
-# Fiscal — inspeção farmacêutica 3D
+# Farmácia VR — Sistema de inspeção virtual
 
-Jogo de inspeção em primeira pessoa feito com Three.js, Vite, WebGL e WebXR. O cenário é montado proceduralmente e os itens de inspeção são meshes independentes. Não há realce de erros durante o jogo; os problemas são descobertos pela inspeção dos objetos.
+Protótipo educacional 3D de inspeção de uma farmácia e laboratório, feito com Three.js, Vite e JavaScript ES Modules. Não usa backend nem serviços externos em tempo de execução.
 
 ## Executar
 
-Requer Node.js 20.19+ ou 22.12+.
+- Requer Node.js 20.19+ ou 22.12+.
+- `npm install`
+- `npm run dev`
+- `npm run build` para gerar `dist/`.
 
-```sh
-npm install
-npm run dev
-```
+## Como jogar
 
-Para gerar e conferir o pacote de produção:
+Leia a missão, explore a sala com WASD/setas e mouse (arraste para olhar). Mire em um item para ver seu nome e escolha **Inspecionar** ou pressione E/Enter. Leia os dados do objeto e decida se confirma uma irregularidade. Uma resposta errada custa pontos e vida; uma certa premia, aumenta combo e avança a missão. Pistas custam pontos e dão orientação geral sem apontar um objeto.
 
-```sh
-npm run build
-npm run preview
-```
+No celular, use o joystick virtual e arraste a tela para olhar. A API de orientação é ativada pelo botão de movimento quando suportada e após autorização do navegador. O botão VR inicia uma sessão WebXR imersiva quando o navegador e o dispositivo oferecem suporte; o jogo continua jogável em modo desktop/mobile quando não oferecem.
 
-## GitHub Pages
+## Publicação no GitHub Pages
 
-O `vite.config.js` usa `base: './'`, logo os recursos usam caminhos relativos em páginas raiz ou subdiretórios como `https://usuario.github.io/nome-do-repositorio/`. Gere `dist/` com `npm run build` e publique essa pasta pelo GitHub Pages ou por uma action de deploy estático.
-
-## Controles e modos
-
-- **Desktop:** clique no ambiente para capturar o mouse; WASD move; mouse olha; `F` examina o alvo; `C` recentraliza; `Esc` retorna ao menu; `F3` mostra estado de depuração. Clique em um item para selecioná-lo.
-- **WebXR:** em navegador/dispositivo compatível e servido por HTTPS, use **ENTER WEBXR**. O tracking e o render loop vêm do WebXR/Three.js; DeviceOrientation não é aplicado durante a sessão XR.
-- **Mobile VR:** em Configurações, toque **Ativar Mobile VR** para pedir permissão aos sensores por gesto explícito. O modo renderiza duas vistas com separação estereoscópica ajustável por IPD e máscara ocular. Requer HTTPS e DeviceOrientation.
-- Sem XR/sensores, o modo desktop continua disponível. Qualquer GLB ausente tem geometria procedural equivalente; nenhum áudio externo é exigido.
-
-## Conteúdo do jogo
-
-Cinco níveis com duração e quantidade crescentes, quarenta registros de irregularidade em quatro graus de dificuldade, seleção aleatória por partida, inspeção com decisão Normal/Irregularidade, recompensa, penalidade, combo, três vidas, cronômetro, eventos de ambiente, diagnóstico (WebGL, WebXR, sensores, HTTPS, GPU e FPS), HUD e preferências/recordes persistidos em LocalStorage.
-
-## Referência visual
-
-O pedido mencionava `assets/reference/pharmacy-reference.png`, porém nenhum arquivo de imagem acompanhou o texto recebido. Portanto, o ambiente atual foi construído como cenário original procedural de farmácia/laboratório e não como reconstrução de uma foto não disponibilizada. A arquitetura de assets aceita GLTF/GLB; modelos podem ser adicionados sem tornar os fallbacks procedurais dependentes deles.
-
-## Checklist de verificação manual
-
-**Desktop:** abrir o site; iniciar inspeção; mover câmera; focar/examinar item; verificar pontuação, vidas, combo e timer; testar menu/resultado.
-
-**Mobile:** servir por HTTPS; aceitar sensores; girar em retrato/paisagem; calibrar; testar duas vistas e IPD; conferir diagnóstico.
-
-**WebXR:** iniciar/parar sessão em headset compatível; validar tracking, controllers e retorno à página. WebXR imersivo depende do navegador, headset e origem HTTPS; o diagnóstico exibe a disponibilidade real.
+O Vite está configurado com `base: './'`, para que o build funcione em subpastas. Gere `dist/` com `npm run build` e publique o conteúdo dessa pasta usando GitHub Pages (ou configure uma action para publicar o artefato `dist`). HTTPS é necessário para APIs de movimento e WebXR.
 
 ## Estrutura
 
-```text
-index.html
-src/main.js             cena, loop, XR, interação e estado do jogo
-src/data/errors.js      conteúdo e níveis
-styles/main.css         menus, HUD, painéis e máscara Mobile VR
-assets/models/          modelos opcionais GLTF/GLB
-assets/audio/           sons opcionais
-assets/reference/       imagem de referência quando fornecida
-```
+- `src/main.js`: inicialização, controles e loop de jogo.
+- `src/world/PharmacyScene.js`: cenário 3D, objetos e iluminação.
+- `src/game/MissionManager.js`: dados, validação, pontuação e progressão.
+- `src/ui/interface.js`: HUD e painéis.
+
+Os metadados de irregularidade existem somente nos objetos internos do jogo. Nenhum marcador revela alvos.
